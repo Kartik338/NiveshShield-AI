@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NiveshShield AI</title>
+<style>
+:root{--g:#5BA8FF;--ink:#E8F0FF;--mute:#93A6C4;--line:#ffffff1f;--hi:#FF5C5C;--mark:#FFD54A}
+body[data-risk=LOW]{--g:#3DDC97}body[data-risk=MEDIUM]{--g:#FFB84D}body[data-risk=HIGH]{--g:#FF5C5C}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.6 "Segoe UI","Noto Sans Devanagari",system-ui,sans-serif;overflow-x:hidden;
+background:radial-gradient(900px 560px at 85% -10%,#1d4a9a55,transparent),radial-gradient(700px 500px at -10% 40%,#4a1d9a40,transparent),#060D1B}
+body::before{content:"";position:fixed;top:-160px;right:-120px;width:560px;height:560px;background:radial-gradient(circle,var(--g),transparent 65%);opacity:.2;pointer-events:none;transition:opacity .6s}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 70px;position:relative}
+.top{display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:700;letter-spacing:.3px;display:flex;gap:8px;align-items:center}
+.lang{display:flex;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:#ffffff0d}
+.lang button{padding:5px 14px;border:0;background:none;color:var(--ink);cursor:pointer;font:inherit;font-size:14px}.lang .on{background:var(--g);color:#06101f}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:10px;margin:14px 0 8px}
+@media(max-width:700px){.hero{grid-template-columns:1fr}}
+h1{font:700 clamp(32px,6vw,52px)/1.08 Georgia,"Noto Serif Devanagari",serif;margin:0 0 12px}
+.sub{color:var(--mute);margin:0;max-width:46ch}
+.stage{perspective:850px;height:270px;display:grid;place-items:center}
+.shield{position:relative;width:200px;height:245px;transform-style:preserve-3d;transform:rotateX(var(--rx,8deg)) rotateY(var(--ry,-14deg));transition:transform .18s ease-out}
+.float{position:absolute;inset:0;transform-style:preserve-3d;animation:fl 6s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-12px)}}
+.shield svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.shield path.s{fill:var(--g);stroke:var(--g);stroke-width:2}
+.shield .front path.s{fill:url(#fg)}
+.glyph{fill:none;stroke:#fff;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 4px 6px #0006)}
+.shadow{position:absolute;bottom:-26px;left:50%;width:150px;height:22px;margin-left:-75px;background:radial-gradient(#0009,transparent 70%);transform:translateZ(-80px)}
+.glass{background:linear-gradient(145deg,#ffffff1c,#ffffff08);border:1px solid var(--line);border-radius:18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 #ffffff25 inset,0 24px 50px -18px #000c,0 2px 8px #0006}
+.tool{padding:6px 18px 18px;margin-top:6px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs button{padding:13px 14px;border:0;background:none;color:var(--mute);font:inherit;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:#fff;font-weight:600;border-color:var(--g)}
+textarea,input[type=text]{width:100%;padding:13px;border:1px solid var(--line);background:#050B17aa;color:var(--ink);font:inherit;border-radius:12px;box-shadow:0 4px 12px #0007 inset}
+input[type=file]{color:var(--mute)}
+textarea{min-height:130px;resize:vertical}
+.row{display:flex;gap:14px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.go{padding:12px 28px;border:0;border-radius:12px;color:#fff;font:inherit;font-weight:700;cursor:pointer;background:linear-gradient(#5B9BFF,#2B63D9);box-shadow:0 6px 0 #1A3F8F,0 14px 24px #0008;transition:transform .08s,box-shadow .08s}
+.go:active{transform:translateY(5px);box-shadow:0 1px 0 #1A3F8F,0 4px 8px #0008}
+.ghost{background:none;border:0;color:var(--g);cursor:pointer;font:inherit;text-decoration:underline}
+.trust{color:var(--mute);font-size:13px;margin-left:auto}
+:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+#out{margin-top:22px;perspective:1100px}
+.t3{animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*70ms);transition:transform .15s ease-out,box-shadow .2s;transform-style:preserve-3d}
+@keyframes rise{from{opacity:0;transform:rotateX(-22deg) translateY(30px)}}
+.grid{display:grid;grid-template-columns:230px 1fr;gap:16px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.gauge{padding:16px;text-align:center}
+.gauge svg{width:100%;max-width:200px;filter:drop-shadow(0 0 10px var(--g))}
+.arc{fill:none;stroke-width:14;stroke-linecap:round}.track{stroke:#ffffff1c}.val{stroke:var(--g);stroke-dasharray:283;transition:stroke-dashoffset .9s}
+.num{font:700 40px Georgia,serif;fill:#fff}.lv{font-weight:700;color:var(--g);margin-top:-6px}
+.gauge small{display:block;color:var(--mute);font-size:13px}
+.doc{padding:16px 18px}h2,h3{margin:0 0 8px;font-size:15px}
+.msg{white-space:pre-wrap;word-break:break-word;font-size:15px}
+mark{background:var(--mark);color:#1b1300;padding:1px 4px;border-radius:5px;box-shadow:0 2px 6px #0006}
+mark sup{font:700 10px sans-serif;margin-left:2px;color:#a3150e}
+.flags{margin-top:18px}.flag{display:flex;gap:12px;padding:12px 14px;margin-bottom:10px}
+.badge{flex:none;width:28px;height:28px;border-radius:50%;background:linear-gradient(#FFE27A,#E8B400);display:grid;place-items:center;font:700 13px sans-serif;color:#1b1300;box-shadow:0 3px 0 #8a6a00}
+.flag p{margin:0}.imp{height:5px;background:#ffffff1c;border-radius:3px;margin-top:8px;max-width:170px}.imp i{display:block;height:100%;background:var(--g);border-radius:3px;box-shadow:0 0 8px var(--g)}
+.act{margin-top:18px;padding:16px 18px;border-left:5px solid var(--g)}
+.act ol{margin:8px 0 0;padding-left:22px}.act li{margin-bottom:4px}
+.help{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.help a{padding:8px 15px;border-radius:20px;color:#fff;text-decoration:none;font-size:14px;font-weight:600;background:#ffffff14;border:1px solid var(--line);box-shadow:0 4px 0 #0007;transition:transform .08s}
+.help a:hover{border-color:var(--g)}.help a:active{transform:translateY(3px)}
+.note{color:var(--mute);font-size:13px;margin-top:16px}.hide{display:none}.empty{padding:16px;color:var(--mute)}
+@media(prefers-reduced-motion:reduce){.float,.t3{animation:none}.val,.shield{transition:none}}
+</style></head><body data-risk="">
+<div class="wrap">
+<div class="top"><div class="brand"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFD54A" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>NiveshShield AI</div>
+<div class="lang"><button id="l-en" class="on">EN</button><button id="l-hi">हिं</button></div></div>
+<div class="hero"><div><h1 id="h"></h1><p class="sub" id="tag"></p></div>
+<div class="stage"><div class="shield" id="shield"><div class="float" id="layers"></div><div class="shadow"></div></div></div></div>
+<div class="glass tool">
+<div class="tabs" role="tablist"><button class="on" data-t="msg"></button><button data-t="url"></button><button data-t="img"></button></div>
+<section id="msg"><textarea id="m" aria-label="message"></textarea><div class="row"><button class="go" id="gm"></button><button class="ghost" id="demo"></button><span class="trust" id="trust"></span></div></section>
+<section id="url" class="hide"><input type="text" id="u" placeholder="https://"><div class="row"><button class="go" id="gu"></button></div></section>
+<section id="img" class="hide"><input type="file" id="f" accept="image/*"><div class="row"><button class="go" id="gi"></button></div></section>
+</div>
+<div id="out" aria-live="polite"></div></div>
+<script>
+const T={en:{h:"Pause before you pay.",tag:"Paste a WhatsApp or Telegram investment message, a link, or a screenshot. See exactly which words look risky and why.",msg:"Message",url:"Link",img:"Screenshot",go:"Check now",demo:"Try a sample scam",ph:"Paste the message here",trust:"Your message is not stored.",lvl:{LOW:"Low risk",MEDIUM:"Medium risk",HIGH:"High risk"},score:"out of 100",said:"What the message says",why:"Why it looks risky",none:"No warning signs found. Still verify anything involving money.",steps:"What to do now",wait:"Checking…",err:"Something went wrong.",impact:"Impact on score",call:"Call 1930",lk:"Link"},
+hi:{h:"पैसे भेजने से पहले रुकें।",tag:"WhatsApp या Telegram का निवेश मैसेज, लिंक या स्क्रीनशॉट डालें। देखें कि कौन से शब्द जोखिम भरे हैं और क्यों।",msg:"मैसेज",url:"लिंक",img:"स्क्रीनशॉट",go:"अभी जाँचें",demo:"नमूना स्कैम आज़माएं",ph:"मैसेज यहाँ पेस्ट करें",trust:"आपका मैसेज सेव नहीं होता।",lvl:{LOW:"कम जोखिम",MEDIUM:"मध्यम जोखिम",HIGH:"ज़्यादा जोखिम"},score:"100 में से",said:"मैसेज में क्या लिखा है",why:"यह जोखिम भरा क्यों लगता है",none:"कोई चेतावनी संकेत नहीं मिला। फिर भी पैसों से जुड़ी हर बात खुद जाँचें।",steps:"अब क्या करें",wait:"जाँच हो रही है…",err:"कुछ गड़बड़ हुई।",impact:"स्कोर पर असर",call:"1930 पर कॉल करें",lk:"लिंक"}};
+const SAMPLE="🔥 SEBI registered VIP group! Guaranteed 5% profit daily, pakka munafa. Pay Rs 5000 registration fee to 98xxxx@ybl and join t.me/viptips. Hurry, last 3 slots today only! Withdraw profit after paying tax. Link: http://sbi-invest-bonus.xyz";
+const SH="M100 8L182 40V112C182 172 142 212 100 238 58 212 18 172 18 112V40Z",GL={"":"M62 122l26 27 52-58",LOW:"M62 122l26 27 52-58",MEDIUM:"M100 80V140M100 170V172",HIGH:"M68 88L132 152M132 88L68 152"};
+let L="en",last=null,src="";const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let lay='<svg width="0" height="0"><defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--g)"/><stop offset="1" stop-color="#0b1d3a"/></linearGradient></defs></svg>';
+for(let i=0;i<6;i++)lay+=`<svg viewBox="0 0 200 245" style="transform:translateZ(${-60+i*14}px)"><path class="s" d="${SH}" style="fill-opacity:${.05+i*.03};stroke-opacity:${.25+i*.1}"/></svg>`;
+lay+=`<svg class="front" viewBox="0 0 200 245" style="transform:translateZ(46px)"><path class="s" d="${SH}"/><path class="glyph" id="gly" d="${GL[""]}"/></svg>`;$("#layers").innerHTML=lay;
+function setRisk(l){document.body.dataset.risk=l||"";$("#gly").setAttribute("d",GL[l||""])}
+document.addEventListener("mousemove",e=>{const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5,s=$("#shield").style;s.setProperty("--ry",(x*40-8)+"deg");s.setProperty("--rx",(8-y*30)+"deg")});
+function ui(){const t=T[L];$("#h").textContent=t.h;$("#tag").textContent=t.tag;$$(".tabs button").forEach(b=>b.textContent=t[b.dataset.t]);$("#m").placeholder=t.ph;
+["gm","gu","gi"].forEach(i=>$("#"+i).textContent=t.go);$("#demo").textContent=t.demo;$("#trust").textContent="🔒 "+t.trust;
+$("#l-en").classList.toggle("on",L=="en");$("#l-hi").classList.toggle("on",L=="hi");document.documentElement.lang=L;if(last)show(last)}
+$("#l-en").onclick=()=>{L="en";ui()};$("#l-hi").onclick=()=>{L="hi";ui()};
+$$(".tabs button").forEach(b=>b.onclick=()=>{$("#out").innerHTML="";last=null;setRisk("");$$(".tabs button").forEach(x=>x.classList.toggle("on",x==b));["msg","url","img"].forEach(s=>$("#"+s).classList.toggle("hide",s!=b.dataset.t))});
+$("#demo").onclick=()=>$("#m").value=SAMPLE;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function annotate(text,r){const sp=[];r.flags.forEach((f,i)=>{const k=(f.match||"").toLowerCase(),x=k?text.toLowerCase().indexOf(k):-1;if(x>=0)sp.push([x,x+k.length,String(i+1)])});
+(r.urls||[]).filter(u=>u.flags.length).forEach(u=>{const x=text.toLowerCase().indexOf(u.url.toLowerCase());if(x>=0)sp.push([x,x+u.url.length,T[L].lk.charAt(0)])});
+sp.sort((a,b)=>a[0]-b[0]);let h="",p=0;for(const[s,e,n]of sp){if(s<p)continue;h+=esc(text.slice(p,s))+`<mark>${esc(text.slice(s,e))}<sup>${n}</sup></mark>`;p=e}return h+esc(text.slice(p))}
+function show(r){last=r;setRisk(r.level);const t=T[L];let i=0;const A=()=>`style="--i:${i++}"`;
+const all=[...r.flags.map((f,k)=>({n:k+1,f,w:f.weight})),...(r.urls||[]).flatMap(u=>u.flags.map(f=>({n:t.lk.charAt(0),f,w:f.weight})))];
+let h=`<div class="grid"><div class="glass t3 gauge" ${A()}><svg viewBox="0 0 200 118"><path class="arc track" d="M10 104A90 90 0 0 1 190 104"/><path class="arc val" id="arc" d="M10 104A90 90 0 0 1 190 104" style="stroke-dashoffset:283"/><text class="num" x="100" y="98" text-anchor="middle">${r.score}</text></svg><div class="lv">${t.lvl[r.level]}</div><small>${t.score}</small></div>`;
+h+=`<div class="glass t3 doc" ${A()}>`+(src?`<h3>${t.said}</h3><div class="msg">${annotate(src,r)}</div>`:`<h3>${t.why}</h3>`)+`</div></div><div class="flags"><h2>${t.why}</h2>`;
+h+=all.length?all.map(a=>`<div class="glass t3 flag" ${A()}><span class="badge">${esc(a.n)}</span><div><p>${esc(a.f[L])}</p><div class="imp" title="${t.impact}"><i style="width:${Math.min(100,Math.round(a.w*200))}%"></i></div></div></div>`).join(""):`<div class="glass t3 empty" ${A()}>${t.none}</div>`;
+h+=`</div>`;if(r.sebi_note)h+=`<div class="glass t3 flag" ${A()}><span class="badge">!</span><p>${esc(r.sebi_note[L])}</p></div>`;
+h+=`<div class="glass t3 act" ${A()}><h2>${t.steps}</h2><ol>${r.next_steps.map(s=>`<li>${esc(s[L])}</li>`).join("")}</ol><div class="help"><a href="tel:1930">📞 ${t.call}</a><a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a><a href="https://scores.sebi.gov.in" target="_blank" rel="noopener">SEBI SCORES</a></div></div><p class="note">${esc(r.uncertainty[L])}</p>`;
+$("#out").innerHTML=h;requestAnimationFrame(()=>requestAnimationFrame(()=>{$("#arc").style.strokeDashoffset=283*(1-r.score/100)}));$("#out").scrollIntoView({behavior:"smooth",block:"start"})}
+$("#out").addEventListener("mousemove",e=>{const c=e.target.closest(".t3");if(!c||matchMedia("(pointer:coarse)").matches)return;const b=c.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;c.style.transform=`perspective(800px) rotateX(${-y*5}deg) rotateY(${x*6}deg) translateZ(6px)`});
+$("#out").addEventListener("mouseout",e=>{const c=e.target.closest(".t3");if(c)c.style.transform=""});
+async function call(url,opt,text){$("#out").innerHTML=`<div class="glass empty">${T[L].wait}</div>`;try{const res=await fetch(url,opt),d=await res.json();if(!res.ok)throw d.error;src=text??d.extracted_text??"";show(d)}catch(e){setRisk("");$("#out").innerHTML=`<div class="glass empty">${esc(typeof e=="string"?e:T[L].err)}</div>`}}
+const J=b=>({method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});
+$("#gm").onclick=()=>{const v=$("#m").value;if(v.trim())call("/scan-message",J({text:v,lang:L}),v)};
+$("#gu").onclick=()=>{const v=$("#u").value.trim();if(v)call("/scan-url",J({url:v}),v)};
+$("#gi").onclick=()=>{const f=$("#f").files[0];if(!f)return;const fd=new FormData();fd.append("image",f);fd.append("lang",L);call("/scan-image",{method:"POST",body:fd},null)};
+ui();
+</script></body></html>
